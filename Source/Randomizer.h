@@ -7,6 +7,7 @@
 class Randomizer {
 public:
 	void GenerateNormal(HWND loadingHandle);
+	void GenerateEasy(HWND loadingHandle);
 	void GenerateHard(HWND loadingHandle);
 
 	void AdjustSpeed();

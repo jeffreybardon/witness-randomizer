@@ -41,6 +41,7 @@
 #define IDC_DIFFICULTY_EXPERT 0x502
 #define IDC_COLORBLIND 0x503
 #define IDC_DOUBLE 0x504
+#define IDC_DIFFICULTY_EASY 0x505
 
 #define SHAPE_11 0x1000
 #define SHAPE_12 0x2000
@@ -73,7 +74,7 @@
 //Panel to edit
 int panel = 0x09E69;
 
-HWND hwndSeed, hwndRandomize, hwndCol, hwndRow, hwndElem, hwndColor, hwndLoadingText, hwndNormal, hwndExpert, hwndColorblind, hwndDoubleMode;
+HWND hwndSeed, hwndRandomize, hwndCol, hwndRow, hwndElem, hwndColor, hwndLoadingText, hwndNormal, hwndExpert, hwndColorblind, hwndDoubleMode, hwndEasy;
 std::shared_ptr<Panel> _panel;
 std::shared_ptr<Randomizer> randomizer = std::make_shared<Randomizer>();
 std::shared_ptr<Generate> generator = std::make_shared<Generate>();
@@ -88,9 +89,11 @@ Decoration::Shape symbol;
 Decoration::Color color;
 int currentShape;
 int currentDir;
+bool easy = false;
 bool hard = false;
 bool doubleMode = false;
 int lastSeed;
+bool lastEasy;
 bool lastHard;
 bool colorblind;
 std::vector<long long> shapePos = { SHAPE_11, SHAPE_12, SHAPE_13, SHAPE_14, SHAPE_21, SHAPE_22, SHAPE_23, SHAPE_24, SHAPE_31, SHAPE_32, SHAPE_33, SHAPE_34, SHAPE_41, SHAPE_42, SHAPE_43, SHAPE_44 };
@@ -132,6 +135,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case IDC_DIFFICULTY_EXPERT:
 			hard = true;
+			break;
+		case IDC_DIFFICULTY_EASY:
+			easy = true;
 			break;
 		case IDC_COLORBLIND:
 			colorblind = !IsDlgButtonChecked(hwnd, IDC_COLORBLIND);
@@ -205,6 +211,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 						break;
 					}
 				}
+				bool lastEasy = (Special::ReadPanelData<int>(0x0A3B5, BACKGROUND_REGION_COLOR + 12) > 0);
+				//TODO: fix this section to account for easy
 				bool lastDouble = (Special::ReadPanelData<int>(0x0A3B2, BACKGROUND_REGION_COLOR + 12) > 0);
 				if (lastDouble && !doubleMode) {
 					if (MessageBox(hwnd, L"This save file was previously randomized on Double Mode. Are you sure you want to disable it?", NULL, MB_YESNO) == IDNO) {
@@ -245,9 +253,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			randomizer->colorblind = IsDlgButtonChecked(hwnd, IDC_COLORBLIND);
 			randomizer->doubleMode = doubleMode;
 			if (hard) randomizer->GenerateHard(hwndLoadingText);
+			else if (easy) randomizer->GenerateEasy(hwndLoadingText);
 			else randomizer->GenerateNormal(hwndLoadingText);
 			Special::WritePanelData(0x00064, BACKGROUND_REGION_COLOR + 12, seed);
 			Special::WritePanelData(0x00182, BACKGROUND_REGION_COLOR + 12, hard);
+			Special::WritePanelData(0x0A3B5, BACKGROUND_REGION_COLOR + 12, easy);
 			Special::WritePanelData(0x0A3B2, BACKGROUND_REGION_COLOR + 12, doubleMode);
 			SetWindowText(hwndRandomize, L"Randomized!");
 			SetWindowText(hwndSeed, std::to_wstring(seed).c_str());
@@ -410,7 +420,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	RegisterClassW(&wndClass);
 
 	HWND hwnd = CreateWindow(WINDOW_CLASS, PRODUCT_NAME, WS_OVERLAPPEDWINDOW,
-      650, 200, 600, DEBUG ? 700 : 320, nullptr, nullptr, hInstance, nullptr);
+      650, 200, 600, DEBUG ? 740 : 360, nullptr, nullptr, hInstance, nullptr);
 
 	//Initialize memory globals constant depending on game version
 	Memory memory("witness64_d3d11.exe");
@@ -452,6 +462,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	//Get the seed and difficulty previously used for this save file (if applicable)
 	int lastSeed = Special::ReadPanelData<int>(0x00064, BACKGROUND_REGION_COLOR + 12);
 	hard = (Special::ReadPanelData<int>(0x00182, BACKGROUND_REGION_COLOR + 12) > 0);
+	easy = (Special::ReadPanelData<int>(0x0A3B5, BACKGROUND_REGION_COLOR + 12) > 0);
 	doubleMode = (Special::ReadPanelData<int>(0x0A3B2, BACKGROUND_REGION_COLOR + 12) > 0);
 
 	//-------------------------Basic window controls---------------------------
@@ -469,35 +480,38 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance
 	hwndExpert = CreateWindow(L"BUTTON", L"EXPERT - Very difficult puzzles with complex mechanics and mind-boggling new tricks. For brave players seeking the ultimate challenge.",
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON | BS_MULTILINE,
 		10, 75, 570, 35, hwnd, (HMENU)IDC_DIFFICULTY_EXPERT, hInstance, NULL);
+	hwndEasy = CreateWindow(L"BUTTON", L"EASY - Puzzles that should be similar in difficulty to the original. For newcomers and those wishing to get their feet wet.",
+		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_AUTORADIOBUTTON | BS_MULTILINE,
+		10, 115, 570, 35, hwnd, (HMENU)IDC_DIFFICULTY_EASY, hInstance, NULL);
 	if (hard) SendMessage(hwndExpert, BM_SETCHECK, BST_CHECKED, 1);
 	else SendMessage(hwndNormal, BM_SETCHECK, BST_CHECKED, 1);
 
 	CreateWindow(L"STATIC", L"Options:",
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | SS_LEFT,
-		10, 125, 120, 16, hwnd, NULL, hInstance, NULL);
+		10, 165, 120, 16, hwnd, NULL, hInstance, NULL);
 	hwndColorblind = CreateWindow(L"BUTTON", L"Colorblind Mode - The colors on certain panels will be changed to be more accommodating to people with colorblindness. The puzzles themselves are identical to those generated without colorblind mode enabled.",
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_CHECKBOX | BS_MULTILINE,
-		10, 145, 570, 50, hwnd, (HMENU)IDC_COLORBLIND, hInstance, NULL);
+		10, 205, 570, 50, hwnd, (HMENU)IDC_COLORBLIND, hInstance, NULL);
 	hwndDoubleMode = CreateWindow(L"BUTTON", L"Double Mode - In addition to generating new puzzles, the randomizer will also shuffle the location of most puzzles. (Not recommended for first playthrough)",
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_CHECKBOX | BS_MULTILINE,
-		10, 200, 570, 35, hwnd, (HMENU)IDC_DOUBLE, hInstance, NULL);
+		10, 240, 570, 35, hwnd, (HMENU)IDC_DOUBLE, hInstance, NULL);
 	if (doubleMode) SendMessage(hwndDoubleMode, BM_SETCHECK, BST_CHECKED, 1);
 
 	CreateWindow(L"STATIC", L"Enter a seed (optional):",
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | SS_LEFT,
-		10, 250, 160, 16, hwnd, NULL, hInstance, NULL);
+		10, 290, 160, 16, hwnd, NULL, hInstance, NULL);
 	hwndSeed = CreateWindow(MSFTEDIT_CLASS, lastSeed == 0 ? L"" : std::to_wstring(lastSeed).c_str(),
         WS_TABSTOP | WS_VISIBLE | WS_CHILD | WS_BORDER,
-        180, 245, 60, 26, hwnd, NULL, hInstance, NULL);
+        180, 285, 60, 26, hwnd, NULL, hInstance, NULL);
 	SendMessage(hwndSeed, EM_SETEVENTMASK, NULL, ENM_CHANGE); // Notify on text change
 
 	hwndRandomize = CreateWindow(L"BUTTON", L"Randomize",
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
-		250, 245, 130, 26, hwnd, (HMENU)IDC_RANDOMIZE, hInstance, NULL);
+		250, 285, 130, 26, hwnd, (HMENU)IDC_RANDOMIZE, hInstance, NULL);
 
 	hwndLoadingText = CreateWindow(L"STATIC", L"",
 		WS_TABSTOP | WS_VISIBLE | WS_CHILD | SS_LEFT,
-		400, 250, 160, 16, hwnd, NULL, hInstance, NULL);
+		400, 290, 160, 16, hwnd, NULL, hInstance, NULL);
 
 	std::ifstream configFile("WRPGconfig.txt");
 	if (configFile.is_open()) {

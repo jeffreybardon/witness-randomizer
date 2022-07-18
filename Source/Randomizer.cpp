@@ -31,6 +31,14 @@ void Randomizer::GenerateNormal(HWND loadingHandle) {
 	if (doubleMode) ShufflePanels(false);
 }
 
+void Randomizer::GenerateEasy(HWND loadingHandle) {
+	std::shared_ptr<PuzzleList> puzzles = std::make_shared<PuzzleList>();
+	puzzles->setLoadingHandle(loadingHandle);
+	puzzles->setSeed(seed, seedIsRNG, colorblind);
+	puzzles->GenerateAllE();
+	if (doubleMode) ShufflePanels(false);
+}
+
 void Randomizer::GenerateHard(HWND loadingHandle) {
 	std::shared_ptr<PuzzleList> puzzles = std::make_shared<PuzzleList>();
 	puzzles->setLoadingHandle(loadingHandle);

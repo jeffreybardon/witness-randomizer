@@ -9,6 +9,7 @@ public:
 
 	void GenerateAllN();
 	void GenerateAllH();
+	void GenerateAllE();
 
 	PuzzleList() {
 		generator = std::make_shared<Generate>();
@@ -79,6 +80,28 @@ public:
 	void GenerateKeepH();
 	void GenerateMonasteryH(); //Can't randomize
 	void GenerateJungleH();
+
+//--------------------------Easy difficulty---------------------------
+
+	void GenerateTutorialE();
+	void GenerateSymmetryE();
+	void GenerateQuarryE();
+	void GenerateBunkerE(); //Can't randomize because panels refuse to render the symbols
+	void GenerateSwampE();
+	void GenerateTreehouseE();
+	void GenerateTownE();
+	void GenerateVaultsE();
+	void GenerateTrianglePanelsE();
+	void GenerateMountainE();
+	void GenerateCavesE();
+
+	//Environmental areas - unless I can figure out how to mess with the game's assets, randomizing most of these puzzles isn't happening anytime soon
+	void GenerateOrchardE();
+	void GenerateDesertE(); //Just scramble the positions for now
+	void GenerateShadowsE(); //Can't randomize
+	void GenerateKeepE();
+	void GenerateMonasteryE(); //Can't randomize
+	void GenerateJungleE();
 
 private:
 	std::shared_ptr<Generate> generator;

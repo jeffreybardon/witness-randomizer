@@ -1469,7 +1469,7 @@ void Special::createText(int id, std::string text, std::vector<float>& intersect
 		{ 'l',{ 0,6,8 } },{ 'm',{ 6,0,4,2,8 } },{ 'n',{ 6,0,8,2 } },{ 'o',{ 0,2,8,6,0 } },{ 'p',{ 6,0,2,5,3 } },{ 'r',{ 6,0,2,5,3,8 } },{ 's',{ 2,0,3,5,8,6 } },
 		{ 't',{ 0,2,1,7 } },{ 'u',{ 0,6,8,2 } },{ 'x',{ 0,8,4,2,6 } },{ '0',{ 0,2,8,6,0 } },{ '1',{ 0,1,7,6,8 } },{ '2',{ 0,2,5,3,6,8 } },{ '3',{ 0,2,5,3,5,8,6 } },
 		{ '4',{ 0,3,5,2,8 } },{ '5',{ 2,0,3,5,8,6 } },{ '6',{ 2,0,6,8,5,3 } },{ '7',{ 0,2,7 } },{ '8',{ 0,2,8,6,0,3,5 } },{ '9',{ 6,8,2,0,3,5 } },
-		{ '!',{ 1,4,7 } },{ ' ',{ } },{ '.',{ 7 } },{ '-',{ 3,5 } }
+		{ '!',{ 1,4,7 } },{ ' ',{ } },{ '.',{ 7 } },{ '-',{ 3,5 } },{'y',{0,3,5,2,5,4,7}}
 	};
 
 	float spacingX = (right - left) / (text.size() * 3 - 1);
@@ -1517,17 +1517,27 @@ void Special::drawText(int id, std::vector<float>& intersections, std::vector<in
 	panel._memory->WritePanelData<int>(id, NEEDS_REDRAW, { 1 });
 }
 
-void Special::drawSeedAndDifficulty(int id, int seed, bool hard, bool setSeed, bool options)
+void Special::drawSeedAndDifficulty(int id, int seed, bool hard, bool easy, bool setSeed, bool options)
 {
 	std::vector<float> intersections;
 	std::vector<int> connectionsA;
 	std::vector<int> connectionsB;
 
-	createText(id, hard ? "expert" : "normal", intersections, connectionsA, connectionsB, 0.1f, 0.9f, 0.25f, 0.4f);
+	if (hard) {
+		createText(id, "expert", intersections, connectionsA, connectionsB, 0.1f, 0.9f, 0.25f, 0.4f);
+	}
+	else if (easy) {
+		createText(id, "easy", intersections, connectionsA, connectionsB, 0.2f, 0.8f, 0.25f, 0.4f);
+	}
+	else {
+		createText(id, "normal", intersections, connectionsA, connectionsB, 0.1f, 0.9f, 0.25f, 0.4f);
+	}
+	
 	std::string seedStr = std::to_string(seed);
 	createText(id, seedStr, intersections, connectionsA, connectionsB, 0.5f - seedStr.size()*0.06f, 0.5f + seedStr.size()*0.06f, setSeed ? 0.6f : 0.65f, setSeed ? 0.75f : 0.8f);
 	if (setSeed) createText(id, "set seed", intersections, connectionsA, connectionsB, 0.1f, 0.9f, 0.86f, 0.96f);
-	std::string version = VERSION_STR;
+	//std::string version = VERSION_STR;
+	std::string version = "1.3.E";
 	createText(id, version, intersections, connectionsA, connectionsB, 0.98f - version.size()*0.06f, 0.98f, 0.02f, 0.10f);
 	if (options) createText(id, "option", intersections, connectionsA, connectionsB, 0.02f, 0.5f, 0.02f, 0.10f);
 
