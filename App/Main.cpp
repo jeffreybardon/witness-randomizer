@@ -132,12 +132,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//Difficulty selection
 		case IDC_DIFFICULTY_NORMAL:
 			hard = false;
+			easy = false;
 			break;
 		case IDC_DIFFICULTY_EXPERT:
 			hard = true;
+			easy = false;
 			break;
 		case IDC_DIFFICULTY_EASY:
 			easy = true;
+			hard = false;
 			break;
 		case IDC_COLORBLIND:
 			colorblind = !IsDlgButtonChecked(hwnd, IDC_COLORBLIND);
@@ -195,24 +198,35 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 				}
 				lastHard = (Special::ReadPanelData<int>(0x00182, BACKGROUND_REGION_COLOR + 12) > 0);
+				lastEasy = (Special::ReadPanelData<int>(0x0A3B5, BACKGROUND_REGION_COLOR + 12) > 0);
 				if (!lastHard && hard) {
-					if (MessageBox(hwnd, L"This save file was previously randomized on Normal. Are you sure you want to switch to Expert?", NULL, MB_YESNO) == IDNO) {
+					if (MessageBox(hwnd, L"This save file was previously randomized on a different difficulty. Are you sure you want to switch to Expert?", NULL, MB_YESNO) == IDNO) {
 						SendMessage(hwndNormal, BM_SETCHECK, BST_CHECKED, 1);
+						SendMessage(hwndEasy, BM_SETCHECK, BST_CHECKED, 1); //TODO: make sure this is right
 						SendMessage(hwndExpert, BM_SETCHECK, BST_UNCHECKED, 1);
 						hard = false;
 						break;
 					}
 				}
-				if (lastHard && !hard) {
-					if (MessageBox(hwnd, L"This save file was previously randomized on Expert. Are you sure you want to switch to Normal?", NULL, MB_YESNO) == IDNO) {
+				if (!lastEasy && easy) {
+					if (MessageBox(hwnd, L"This save file was previously randomized on a different difficulty. Are you sure you want to switch to Easy?", NULL, MB_YESNO) == IDNO) {
+						SendMessage(hwndNormal, BM_SETCHECK, BST_CHECKED, 1);
 						SendMessage(hwndExpert, BM_SETCHECK, BST_CHECKED, 1);
-						SendMessage(hwndNormal, BM_SETCHECK, BST_UNCHECKED, 1);
-						hard = true;
+						SendMessage(hwndEasy, BM_SETCHECK, BST_UNCHECKED, 1); //TODO: make sure this is right
+						easy = false;
 						break;
 					}
 				}
-				bool lastEasy = (Special::ReadPanelData<int>(0x0A3B5, BACKGROUND_REGION_COLOR + 12) > 0);
-				//TODO: fix this section to account for easy
+				if ((lastHard || lastEasy) && (!hard && !easy)) {
+					if (MessageBox(hwnd, L"This save file was previously randomized on different difficulty. Are you sure you want to switch to Normal?", NULL, MB_YESNO) == IDNO) {
+						SendMessage(hwndExpert, BM_SETCHECK, BST_CHECKED, 1);
+						SendMessage(hwndEasy, BM_SETCHECK, BST_CHECKED, 1); //TODO: make sure this is right
+						SendMessage(hwndNormal, BM_SETCHECK, BST_UNCHECKED, 1);
+						if (lastHard) hard = true;
+						if (lastEasy) easy = true;
+						break;
+					}
+				}
 				bool lastDouble = (Special::ReadPanelData<int>(0x0A3B2, BACKGROUND_REGION_COLOR + 12) > 0);
 				if (lastDouble && !doubleMode) {
 					if (MessageBox(hwnd, L"This save file was previously randomized on Double Mode. Are you sure you want to disable it?", NULL, MB_YESNO) == IDNO) {
