@@ -25,6 +25,8 @@ public:
 	}
 	
 	void generateSpecialSymMaze(std::shared_ptr<Generate> gen, int id);
+	void generateSpecialSymMazeGeneric(std::shared_ptr<Generate> gen, int id, int width, int height, int offset);
+	void generateSpecialSymDoor(std::shared_ptr<Generate> gen, int id, int width, int height, int dots, int gaps);
 	void generateReflectionDotPuzzle(std::shared_ptr<Generate> gen, int id1, int id2, std::vector<std::pair<int, int>> symbols, Panel::Symmetry symmetry, bool split);
 	void generateAntiPuzzle(int id);
 	void generateColorFilterPuzzle(int id, Point size, const std::vector<std::pair<int, int>>& symbols, const Color& filter, bool colorblind);
