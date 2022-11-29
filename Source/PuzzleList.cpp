@@ -60,7 +60,7 @@ void PuzzleList::GenerateAllE()
 	CopyTargets();
 	GenerateTutorialE();
 	GenerateSymmetryE();
-	GenerateQuarryE();
+/*	GenerateQuarryE();
 	//GenerateBunkerE(); //Can't randomize because panels refuse to render the symbols
 	GenerateSwampE();
 	GenerateTreehouseE();
@@ -72,7 +72,7 @@ void PuzzleList::GenerateAllE()
 	GenerateKeepE();
 	GenerateJungleE();
 	GenerateMountainE();
-	GenerateCavesE();
+	GenerateCavesE(); // */
 	SetWindowText(_handle, L"Done!");
 	(new ArrowWatchdog(0x0056E))->start(); //Easy way to close the randomizer when the game is done
 	//GenerateShadowsE(); //Can't randomize
@@ -2340,6 +2340,7 @@ void PuzzleList::GenerateJungleH()
 	}
 }
 
+//--------------------------EASY MODE-----------------------------
 
 void PuzzleList::GenerateTutorialE()
 {
@@ -2428,31 +2429,28 @@ void PuzzleList::GenerateSymmetryE()
 	generator->resetConfig();
 	generator->setFlag(Generate::Config::StartEdgeOnly);
 	generator->setSymmetry(Panel::Symmetry::Rotational);
-	generator->setGridSize(4, 5);
-	generator->generateMaze(0x0008D, 0, 1);
 	generator->setGridSize(5, 4);
+	generator->generateMaze(0x0008D, 0, 1);
+	generator->setGridSize(4, 5);
 	generator->generateMaze(0x00081, 0, 1);
 	generator->setGridSize(5, 5);
 	generator->generateMaze(0x00083, 0, 1);
 	generator->removeFlag(Generate::Config::StartEdgeOnly);
 	generator->setGridSize(5, 5);
 	generator->generateMaze(0x00084, 1, 1);
-	generator->setGridSize(5, 4);
-	generator->generateMaze(0x00082, 1, 1);
 	generator->setGridSize(4, 5);
+	generator->generateMaze(0x00082, 1, 1);
+	generator->setGridSize(5, 4);
 	generator->generateMaze(0x0343A, 1, 1);
 	//Symmetry Island Door
 	generator->resetConfig();
-	generator->setGridSize(3, 3);
-	generator->setFlagOnce(Generate::Config::FullGaps);
-	generator->generate(0x000B0, Decoration::Dot, 5, Decoration::Gap, 5); //TODO: GET THIS DOOR TO SUPPORT SYMMETRY
-//	specialCase->generateSpecialSymDoor(generator, 0x00080, 7, 3, 5, 5); //note to self: this door hangs if given symmetry for now
+	generator->pathWidth = 0.6f;
+	specialCase->generateSpecialSymDoor(generator, 0x000B0, 7, 3, 6, 4);
 	//Black Dots
-//	specialCase->generateSpecialSymDoor(generator, 0x00022, 7, 3, 5, 5); //TESTING HERE, REMOVE LATER
 	generator->resetConfig();
 	generator->setFlag(Generate::Config::StartEdgeOnly);
 	generator->setGridSize(5, 5);
-	generator->setSymmetry(Panel::Symmetry::Vertical);
+	generator->setSymmetry(Panel::Symmetry::Horizontal);
 	generator->generate(0x00022, Decoration::Dot, 8, Decoration::Start, 1, Decoration::Exit, 1);
 	generator->generate(0x00023, Decoration::Dot, 8, Decoration::Start, 1, Decoration::Exit, 1);
 	generator->setSymmetry(Panel::Symmetry::Rotational);
@@ -2483,6 +2481,7 @@ void PuzzleList::GenerateSymmetryE()
 	generator->generate(0x00071, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Start, 1, Decoration::Exit, 1);
 	generator->generate(0x00076, Decoration::Dot | Decoration::Color::Yellow, 5, Decoration::Start, 1, Decoration::Exit, 1);
 	//Dot Reflection Dual Panels (before laser)
+	// Second Door - 0x1C349
 	generator->resetConfig();
 	std::set<Panel::Symmetry> normalSym = { Panel::Symmetry::Horizontal, Panel::Symmetry::Rotational };
 	std::set<Panel::Symmetry> weirdSym = { Panel::Symmetry::RotateLeft, Panel::Symmetry::RotateRight, Panel::Symmetry::FlipXY, Panel::Symmetry::FlipNegXY };

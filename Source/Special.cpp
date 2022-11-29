@@ -62,19 +62,17 @@ void Special::generateSpecialSymDoor(std::shared_ptr<Generate> gen, int id, int 
 	generator->setSymbol(Decoration::Start, width * 2, height * 2); //bottom right corner
 	generator->setSymbol(Decoration::Exit, width - 1, 0); //top middle, left
 	generator->setSymbol(Decoration::Exit, width + 1, 0); //top middle, right
-
 	generator->generate(id, Decoration::Dot, dots, Decoration::Gap, gaps);
 
 	std::shared_ptr<Panel> puzzle = gen->_panel;
 	for (int x = 0; x < puzzle->_width / 2; x++) {
 		for (int y = 0; y < puzzle->_height; y++) {
 			Point sp = puzzle->get_sym_point(x, y, Panel::Symmetry::Vertical);
-			if (puzzle->_grid[x][y] & Decoration::Gap) {
+			if (puzzle->_grid[x][y] & Decoration::Dot) {
 				puzzle->_grid[sp.first][sp.second] = puzzle->_grid[x][y];
-//				puzzle->_grid[sp.first][sp.second] & IntersectionFlags::OPEN;			//This syntax is wrong and I'm not sure what's right, panel looks fine anyway
 				puzzle->_grid[x][y] = 0;
 			}
-			if (puzzle->_grid[sp.first][sp.second] & Decoration::Dot) {
+			if (puzzle->_grid[sp.first][sp.second] & Decoration::Gap) {
 				puzzle->_grid[x][y] = puzzle->_grid[sp.first][sp.second];
 				puzzle->_grid[sp.first][sp.second] = 0;
 			}
