@@ -2445,54 +2445,72 @@ void PuzzleList::GenerateSymmetryE()
 	//Symmetry Island Door
 	generator->resetConfig();
 	generator->pathWidth = 0.6f;
-	specialCase->generateSpecialSymDoor(generator, 0x000B0, 7, 3, 6, 4);
+	specialCase->generateSpecialSymDoor(generator, 0x000B0, 7, 3, 5, 4);
 	//Black Dots
 	generator->resetConfig();
+	generator->setGridSize(3, 3);
 	generator->setFlag(Generate::Config::StartEdgeOnly);
-	generator->setGridSize(5, 5);
-	generator->setSymmetry(Panel::Symmetry::Horizontal);
-	generator->generate(0x00022, Decoration::Dot, 8, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x00023, Decoration::Dot, 8, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->setSymmetry(Panel::Symmetry::Vertical);
+	generator->generate(0x00022, Decoration::Dot, 3, Decoration::Start, 1, Decoration::Exit, 1);
 	generator->setSymmetry(Panel::Symmetry::Rotational);
+	generator->setGridSize(4, 4);
+	generator->generate(0x00023, Decoration::Dot, 4, Decoration::Start, 1, Decoration::Exit, 1);
 	generator->generate(0x00024, Decoration::Dot, 8, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x00025, Decoration::Dot, 8, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x00026, Decoration::Dot, 8, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->setGridSize(5, 5);
+	generator->setSymmetry(Panel::Symmetry::Vertical);
+	generator->generate(0x00025, Decoration::Dot, 6, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->setSymmetry(Panel::Symmetry::Rotational);
+	generator->generate(0x00026, Decoration::Dot, 6, Decoration::Start, 1, Decoration::Exit, 1);
 	//Colored Dots
+	generator->setGridSize(3, 3);
 	generator->setSymmetry(Panel::Symmetry::Vertical);
-	generator->generate(0x0007C, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x0007E, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Start, 1, Decoration::Exit, 2);
+	generator->generate(0x0007C, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 2, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->setGridSize(5, 5);
+	generator->generate(0x0007E, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->setGridSize(4, 4);
 	generator->setSymmetry(Panel::Symmetry::Rotational);
-	generator->generate(0x00075, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 2, Decoration::Dot, 3, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x00073, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 1, Decoration::Dot, 5, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x00077, Decoration::Dot | Decoration::Color::Blue, 1, Decoration::Dot | Decoration::Color::Yellow, 2, Decoration::Dot, 5, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x00079, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 2, Decoration::Dot, 4, Decoration::Start, 2, Decoration::Exit, 1);
+	generator->generate(0x00075, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 2, Decoration::Dot, 2, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->generate(0x00073, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Dot, 2, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->setGridSize(5, 5);
+	generator->generate(0x00077, Decoration::Dot | Decoration::Color::Blue, 1, Decoration::Dot | Decoration::Color::Yellow, 1, Decoration::Dot, 5, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->generate(0x00079, Decoration::Dot | Decoration::Color::Blue, 5, Decoration::Dot | Decoration::Color::Yellow, 5, Decoration::Dot, 0, Decoration::Start, 1, Decoration::Exit, 1);
 	//Fading Lines
-	generator->setGridSize(6, 6);
-	generator->generate(0x00065, Decoration::Dot | Decoration::Color::Blue, 4, Decoration::Dot | Decoration::Color::Yellow, 2, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x0006D, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Start, 1, Decoration::Exit, 2);
-	generator->generate(0x00072, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 4, Decoration::Start, 2, Decoration::Exit, 1);
-	generator->setSymbol(Decoration::Start, 0, 6);  generator->setSymbol(Decoration::Start, 12, 6);
-	generator->generate(0x0006F, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Exit, 1);
-	generator->setSymmetry(Panel::Symmetry::Vertical);
-	generator->setSymbol(Decoration::Start, 0, 6); generator->setSymbol(Decoration::Start, 12, 6);
-	generator->generate(0x00070, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Exit, 1);
-	generator->setSymmetry(Panel::Symmetry::Rotational);
-	generator->setSymbol(Decoration::Start, 0, 6); generator->setSymbol(Decoration::Start, 12, 6);
-	generator->generate(0x00071, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Start, 1, Decoration::Exit, 1);
-	generator->generate(0x00076, Decoration::Dot | Decoration::Color::Yellow, 5, Decoration::Start, 1, Decoration::Exit, 1);
+	generator->setGridSize(5, 5);
+	generator->setSymbol(Decoration::Start, 0, 10); generator->setSymbol(Decoration::Start, 10, 0);
+	generator->setSymbol(Decoration::Exit, 10, 10); generator->setSymbol(Decoration::Exit, 0, 0);
+	generator->generate(0x00065, Decoration::Dot | Decoration::Color::Blue, 5, Decoration::Dot | Decoration::Color::Yellow, 2);
+	generator->setSymbol(Decoration::Start, 0, 10); generator->setSymbol(Decoration::Start, 10, 0);
+	generator->setSymbol(Decoration::Exit, 10, 10); generator->setSymbol(Decoration::Exit, 0, 0); 
+	generator->generate(0x0006D, Decoration::Dot | Decoration::Color::Blue, 4, Decoration::Dot | Decoration::Color::Yellow, 3);
+	generator->setSymbol(Decoration::Start, 0, 10); generator->setSymbol(Decoration::Start, 10, 0);
+	generator->setSymbol(Decoration::Exit, 10, 10); generator->setSymbol(Decoration::Exit, 0, 0);
+	generator->generate(0x00072, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 4);
+	generator->setSymbol(Decoration::Start, 0, 10); generator->setSymbol(Decoration::Start, 10, 0);
+	generator->setSymbol(Decoration::Exit, 10, 10); generator->setSymbol(Decoration::Exit, 0, 0);
+	generator->generate(0x0006F, Decoration::Dot | Decoration::Color::Blue, 2, Decoration::Dot | Decoration::Color::Yellow, 5);
+	generator->setSymbol(Decoration::Start, 0, 10); generator->setSymbol(Decoration::Start, 10, 0);
+	generator->setSymbol(Decoration::Exit, 10, 10); generator->setSymbol(Decoration::Exit, 0, 0);
+	generator->generate(0x00070, Decoration::Dot | Decoration::Color::Blue, 0, Decoration::Dot | Decoration::Color::Yellow, 0, Decoration::Dot, 6);
+	generator->setSymbol(Decoration::Start, 0, 10); generator->setSymbol(Decoration::Start, 10, 0);
+	generator->setSymbol(Decoration::Exit, 10, 10); generator->setSymbol(Decoration::Exit, 0, 0);
+	generator->generate(0x00071, Decoration::Dot | Decoration::Color::Blue, 3, Decoration::Dot | Decoration::Color::Yellow, 3, Decoration::Dot, 0);
+	generator->setSymbol(Decoration::Start, 0, 10); generator->setSymbol(Decoration::Start, 10, 0);
+	generator->setSymbol(Decoration::Exit, 10, 10); generator->setSymbol(Decoration::Exit, 0, 0);
+	generator->generate(0x00076, Decoration::Dot | Decoration::Color::Yellow, 8);
 	//Dot Reflection Dual Panels (before laser)
 	// Second Door - 0x1C349
 	generator->resetConfig();
 	std::set<Panel::Symmetry> normalSym = { Panel::Symmetry::Horizontal, Panel::Symmetry::Rotational };
 	std::set<Panel::Symmetry> weirdSym = { Panel::Symmetry::RotateLeft, Panel::Symmetry::RotateRight, Panel::Symmetry::FlipXY, Panel::Symmetry::FlipNegXY };
-	specialCase->generateReflectionDotPuzzle(generator, 0x00A52, 0x00A61, { {Decoration::Dot, 10 },
-		{Decoration::Exit, 1}, { Decoration::Gap, 5 } }, Panel::Symmetry::Vertical, false);
-	generator->setSymbol(Decoration::Start, 0, 8);
-	specialCase->generateReflectionDotPuzzle(generator, 0x00A57, 0x00A64, { { Decoration::Dot, 12},
+	generator->setGridSize(3, 3);
+	specialCase->generateReflectionDotPuzzle(generator, 0x00A52, 0x00A61, { {Decoration::Dot, 7 },
+		{Decoration::Exit, 1}, { Decoration::Gap, 4 } }, Panel::Symmetry::Vertical, false);
+	generator->setSymbol(Decoration::Start, 0, 6);
+	specialCase->generateReflectionDotPuzzle(generator, 0x00A57, 0x00A64, { { Decoration::Dot, 8},
 		{ Decoration::Exit, 1}, {Decoration::Gap, 1} }, pop_random(normalSym), false);
-	generator->setSymbol(Decoration::Start, 0, 8); generator->setSymbol(Decoration::Start, 8, 8); generator->setSymbol(Decoration::Start, 8, 0); generator->setSymbol(Decoration::Start, 0, 0);
-	generator->setSymbol(Decoration::Exit, 8, 2);
-	specialCase->generateReflectionDotPuzzle(generator, 0x00A5B, 0x00A68, { { Decoration::Dot, 12} }, pop_random(weirdSym), false);
+	generator->setSymbol(Decoration::Start, 0, 6); generator->setSymbol(Decoration::Start, 6, 6); generator->setSymbol(Decoration::Start, 6, 0); generator->setSymbol(Decoration::Start, 0, 0);
+	generator->setSymbol(Decoration::Exit, 6, 2);
+	specialCase->generateReflectionDotPuzzle(generator, 0x00A5B, 0x00A68, { { Decoration::Dot, 9} }, pop_random(weirdSym), false);
 }
 
 void PuzzleList::GenerateQuarryE()
