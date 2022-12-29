@@ -162,9 +162,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				if (MessageBox(hwnd, L"Game is currently randomized. Are you sure you want to randomize again? (Can cause glitches)", NULL, MB_YESNO) == IDYES) {
 					rerandomize = true;
 					seedIsRNG = false;
-					if (easy) lastDiff = 'E';
-					if (normal) lastDiff = 'N';
-					if (hard) lastDiff = 'X';
 				}
 				else break;
 			}
