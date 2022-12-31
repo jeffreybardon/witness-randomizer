@@ -2502,15 +2502,46 @@ void PuzzleList::GenerateSymmetryE()
 	generator->resetConfig();
 	std::set<Panel::Symmetry> normalSym = { Panel::Symmetry::Horizontal, Panel::Symmetry::Rotational };
 	std::set<Panel::Symmetry> weirdSym = { Panel::Symmetry::RotateLeft, Panel::Symmetry::RotateRight, Panel::Symmetry::FlipXY, Panel::Symmetry::FlipNegXY };
+	
 	generator->setGridSize(3, 3);
-	specialCase->generateReflectionDotPuzzle(generator, 0x00A52, 0x00A61, { {Decoration::Dot, 7 },
-		{Decoration::Exit, 1}, { Decoration::Gap, 4 } }, Panel::Symmetry::Vertical, false);
-	generator->setSymbol(Decoration::Start, 0, 6);
-	specialCase->generateReflectionDotPuzzle(generator, 0x00A57, 0x00A64, { { Decoration::Dot, 8},
-		{ Decoration::Exit, 1}, {Decoration::Gap, 1} }, pop_random(normalSym), false);
+	generator->setFlagOnce(Generate::DisableWrite);
+	generator->generate(0x00A52);
+	generator->setFlagOnce(Generate::DisableWrite);
+	generator->generate(0x00A61);
+	generator->setSymbol(Decoration::Start, 6, 6);
+	generator->setSymbol(Decoration::Exit, 0, 0);
+	specialCase->generateReflectionDotPuzzle(generator, 0x00A52, 0x00A61, { {Decoration::Dot, 6 }, { Decoration::Gap, 3 } }, Panel::Symmetry::Vertical, false);
+
+	generator->setGridSize(3, 3);
+	generator->setFlagOnce(Generate::DisableWrite);
+	generator->generate(0x00A57);
+	generator->setFlagOnce(Generate::DisableWrite);
+	generator->generate(0x00A64);
+	switch(Random::rand() % 4) {
+	case 0 :
+		generator->setSymbol(Decoration::Start, 2, 2);
+		break;
+	case 1 :
+		generator->setSymbol(Decoration::Start, 2, 4);
+		break;
+	case 2:
+		generator->setSymbol(Decoration::Start, 4, 2);
+		break;
+	case 3:
+		generator->setSymbol(Decoration::Start, 4, 4);
+		break;
+	}
+	generator->setSymbol(Decoration::Exit, 0, 0);
+	specialCase->generateReflectionDotPuzzle(generator, 0x00A57, 0x00A64, { { Decoration::Dot, 7}, {Decoration::Gap, 1} }, pop_random(normalSym), false);
+
+	generator->setGridSize(3, 3);
+	generator->setFlagOnce(Generate::DisableWrite);
+	generator->generate(0x00A5B);
+	generator->setFlagOnce(Generate::DisableWrite);
+	generator->generate(0x00A68);
 	generator->setSymbol(Decoration::Start, 0, 6); generator->setSymbol(Decoration::Start, 6, 6); generator->setSymbol(Decoration::Start, 6, 0); generator->setSymbol(Decoration::Start, 0, 0);
 	generator->setSymbol(Decoration::Exit, 6, 2);
-	specialCase->generateReflectionDotPuzzle(generator, 0x00A5B, 0x00A68, { { Decoration::Dot, 9} }, pop_random(weirdSym), false);
+	specialCase->generateReflectionDotPuzzle(generator, 0x00A5B, 0x00A68, { { Decoration::Dot, 8} }, pop_random(weirdSym), false);
 }
 
 void PuzzleList::GenerateQuarryE()
