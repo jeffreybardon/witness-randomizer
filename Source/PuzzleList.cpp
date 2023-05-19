@@ -58,11 +58,11 @@ void PuzzleList::GenerateAllE()
 {
 	generator->setLoadingData(336);
 	CopyTargets();
-	GenerateTutorialE();
-	GenerateSymmetryE();
-/*	GenerateQuarryE();
+ 	GenerateTutorialE();
+	GenerateSymmetryE(); // */
+	GenerateQuarryE();
 	//GenerateBunkerE(); //Can't randomize because panels refuse to render the symbols
-	GenerateSwampE();
+/*	GenerateSwampE();
 	GenerateTreehouseE();
 	GenerateTownE();
 	GenerateVaultsE();
@@ -2504,18 +2504,14 @@ void PuzzleList::GenerateSymmetryE()
 	std::set<Panel::Symmetry> weirdSym = { Panel::Symmetry::RotateLeft, Panel::Symmetry::RotateRight, Panel::Symmetry::FlipXY, Panel::Symmetry::FlipNegXY };
 	
 	generator->setGridSize(3, 3);
-	generator->setFlagOnce(Generate::DisableWrite);
 	generator->generate(0x00A52);
-	generator->setFlagOnce(Generate::DisableWrite);
 	generator->generate(0x00A61);
 	generator->setSymbol(Decoration::Start, 6, 6);
 	generator->setSymbol(Decoration::Exit, 0, 0);
 	specialCase->generateReflectionDotPuzzle(generator, 0x00A52, 0x00A61, { {Decoration::Dot, 6 }, { Decoration::Gap, 3 } }, Panel::Symmetry::Vertical, false);
 
 	generator->setGridSize(3, 3);
-	generator->setFlagOnce(Generate::DisableWrite);
 	generator->generate(0x00A57);
-	generator->setFlagOnce(Generate::DisableWrite);
 	generator->generate(0x00A64);
 	switch(Random::rand() % 4) {
 	case 0 :
@@ -2535,9 +2531,7 @@ void PuzzleList::GenerateSymmetryE()
 	specialCase->generateReflectionDotPuzzle(generator, 0x00A57, 0x00A64, { { Decoration::Dot, 7}, {Decoration::Gap, 1} }, pop_random(normalSym), false);
 
 	generator->setGridSize(3, 3);
-	generator->setFlagOnce(Generate::DisableWrite);
 	generator->generate(0x00A5B);
-	generator->setFlagOnce(Generate::DisableWrite);
 	generator->generate(0x00A68);
 	generator->setSymbol(Decoration::Start, 0, 6); generator->setSymbol(Decoration::Start, 6, 6); generator->setSymbol(Decoration::Start, 6, 0); generator->setSymbol(Decoration::Start, 0, 0);
 	generator->setSymbol(Decoration::Exit, 6, 2);
@@ -2550,8 +2544,9 @@ void PuzzleList::GenerateQuarryE()
 	generator->resetConfig();
 	//Entry Gates
 	generator->setFlag(Generate::Config::EnableFlash);
-	generator->setGridSize(5, 5);
-	generator->generate(0x09E57, Decoration::Stone | Decoration::Color::Black, 7, Decoration::Stone | Decoration::Color::White, 5, Decoration::Gap, 10);
+//	generator->setGridSize(4, 4);
+//	generator->generate(0x09E57, Decoration::Stone | Decoration::Color::Black, 5, Decoration::Stone | Decoration::Color::Orange, 4, Decoration::Stone | Decoration::Color::Red, 1, Decoration::Stone | Decoration::Color::Green, 1, Decoration::Stone | Decoration::Color::Cyan, 1, Decoration::Stone | Decoration::Color::White, 1);
+	specialCase->generateQuarryEntryEasy(generator, 0x09E57);
 	generator->setGridSize(4, 4);
 	generator->setFlagOnce(Generate::Config::RequireCombineShapes);
 	generator->generate(0x17C09, Decoration::Poly, 2, Decoration::Gap, 5);

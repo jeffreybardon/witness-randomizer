@@ -145,6 +145,33 @@ void Special::generateReflectionDotPuzzle(std::shared_ptr<Generate> gen, int id1
 	flippedPuzzle->Write(id2);
 }
 
+void Special::generateQuarryEntryEasy(std::shared_ptr<Generate> gen, int id) {
+	gen->setFlag(Generate::Config::EnableFlash);
+	gen->setFlagOnce(Generate::Config::DisableWrite);
+	generator->setGridSize(4, 4);
+	generator->generate(id, Decoration::Stone | Decoration::Color::Black, 4, Decoration::Stone | Decoration::Color::Orange, 4,
+							 Decoration::Stone | Decoration::Color::Red, 1, Decoration::Stone | Decoration::Color::Green, 1, 
+							 Decoration::Stone | Decoration::Color::Cyan, 1, Decoration::Stone | Decoration::Color::White, 1);
+	std::shared_ptr<Panel> puzzle = gen->_panel;
+	for (int x = 0; x < puzzle->_width; x++) {
+		for (int y = 0; y < puzzle->_height; y++) {
+			if (puzzle->_grid[x][y] == (Decoration::Stone | Decoration::Color::Orange)) {
+				puzzle->_grid[x][y] = Decoration::Stone | Decoration::Color::Black;
+			}
+			if (puzzle->_grid[x][y] == (Decoration::Stone | Decoration::Color::Red)) {
+				puzzle->_grid[x][y] = Decoration::Stone | Decoration::Color::White;
+			}
+			if (puzzle->_grid[x][y] == (Decoration::Stone | Decoration::Color::Green)) {
+				puzzle->_grid[x][y] = Decoration::Stone | Decoration::Color::White;
+			}
+			if (puzzle->_grid[x][y] == (Decoration::Stone | Decoration::Color::Cyan)) {
+				puzzle->_grid[x][y] = Decoration::Stone | Decoration::Color::White;
+			}
+		}
+	}
+	gen->write(id);
+}
+
 void Special::generateAntiPuzzle(int id)
 {
 	while (true) {
